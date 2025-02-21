@@ -202,16 +202,24 @@ sim$species_tr <- species_tr[locale_id <= 1,]
 .inputObjects <- function(sim) {
 
   # CBM-CFS3 Database
-  if (!suppliedElsewhere(sim$dbPath)) {
-   sim$dbPathURL <- extractURL("dbPath")
-   sim$dbPath <- prepInputs(url = sim$dbPathURL,
-                        targetFile = "cbm_defaults_v1.2.8340.362.db",
-                        alsoExtract = NA,
-                        destinationPath = inputPath(sim),
-                        fun = NA,
-                        purge = 7 ##keep this in as it solves the malformed disc error when running in certain scenarios
-                        )
-    ## download file here: https://github.com/cat-cfs/libcbm_py/tree/main/libcbm/resources/cbm_defaults_db
+  if (!suppliedElsewhere("dbPath", sim)){
+    if (suppliedElsewhere("dbPathURL", sim)){
+
+      sim$dbPath <- prepInputs(
+        destinationPath = inputPath(sim),
+        url = sim$dbPathURL
+      )
+
+    }else{
+
+      sim$dbPath <- prepInputs(
+        destinationPath = inputPath(sim),
+        url         = extractURL("dbPath"),
+        targetFile  = "cbm_defaults_v1.2.8340.362.db",
+        fun         = NA,
+        purge = 7 ##keep this in as it solves the malformed disc error when running in certain scenarios
+      )
+    }
   }
 
   # Canada ecozones
