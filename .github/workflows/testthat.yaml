@@ -73,6 +73,9 @@ jobs:
           install.packages("googledrive")
           googledrive::drive_auth(path = Sys.getenv("GOOGLE_AUTH"))
 
+          # Set environmental variable to allow ecozones Shapefile to download
+          Sys.setenv("R_LIBCURL_SSL_REVOKE_BEST_EFFORT" = TRUE)
+
           # Run tests
           testthat::test_dir("tests/testthat", stop_on_failure = TRUE)
 
