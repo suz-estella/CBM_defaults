@@ -212,12 +212,16 @@ sim$species_tr <- species_tr[locale_id <= 1,]
 
     }else{
 
-      sim$dbPath <- prepInputs(
+      sim$dbPath <- file.path(inputPath(sim), "cbm_defaults_v1.2.8340.362.db")
+
+      prepInputs(
         destinationPath = inputPath(sim),
         url         = extractURL("dbPath"),
-        targetFile  = "cbm_defaults_v1.2.8340.362.db",
-        fun         = NA,
-        purge = 7 ##keep this in as it solves the malformed disc error when running in certain scenarios
+        targetFile  = basename(sim$dbPath),
+        dlFun       = if (!file.exists(sim$dbPath)){
+          download.file(extractURL("dbPath"), sim$dbPath, mode = "wb", quiet = TRUE)
+        },
+        fun = NA
       )
     }
   }
@@ -238,28 +242,31 @@ sim$species_tr <- species_tr[locale_id <= 1,]
       ## 2024-12-04 NOTE:
       ## Multiple users had issues downloading and extracting this file via prepInputs.
       ## Downloading the ZIP directly and saving it in the inputs directory works OK.
-      sim$ecoLocator <- tryCatch(
+      sim$ecoLocator <- tryCatch({
+
+        dlPath <- file.path(inputPath(sim), "ecozone_shp.zip")
+        if (!file.exists(dlPath)){
+          download.file(extractURL("ecoLocator"), dlPath, mode = "wb", quiet = TRUE)
+        }
 
         prepInputs(
           destinationPath = inputPath(sim),
           url         = extractURL("ecoLocator"),
-          filename1   = "ecozone_shp.zip",
+          archive     = "ecozone_shp.zip",
           targetFile  = "ecozones.shp",
           alsoExtract = "similar",
-          fun         = sf::st_read(targetFile, quiet = TRUE)
-        ),
+          fun         = sf::st_read(targetFile, agr = "constant", quiet = TRUE)
+        )
 
-        error = function(e) stop(
-          "Canada ecozones Shapefile failed be downloaded and extracted:\n", e$message, "\n\n",
-          "If this error persists, download the ZIP file directly and save it to the inputs directory.",
-          "\nDownload URL: ", extractURL("ecoLocator"),
-          "\nInputs directory: ", normalizePath(inputPath(sim), winslash = "/"),
-          call. = FALSE))
+      }, error = function(e) stop(
+        "Canada ecozones Shapefile failed be downloaded and extracted:\n", e$message, "\n\n",
+        "If this error persists, download the ZIP file directly and save it to the inputs directory.",
+        "\nDownload URL: ", extractURL("ecoLocator"),
+        "\nInputs directory: ", normalizePath(inputPath(sim), winslash = "/"),
+        call. = FALSE))
 
       # Make ecoID field
       sim$ecoLocator <- cbind(ecoID = sim$ecoLocator$ECOZONE, sim$ecoLocator)
-
-      sf::st_agr(sim$ecoLocator) <- "constant"
     }
   }
 
@@ -282,13 +289,11 @@ sim$species_tr <- species_tr[locale_id <= 1,]
         filename1   = "spUnit_Locator.zip",
         targetFile  = "spUnit_Locator.shp",
         alsoExtract = "similar",
-        fun         = sf::st_read(targetFile, quiet = TRUE)
+        fun         = sf::st_read(targetFile, agr = "constant", quiet = TRUE)
       )
 
       # Make spuID field
       sim$spuLocator <- cbind(spuID = sim$spuLocator$spu_id, sim$spuLocator)
-
-      sf::st_agr(sim$spuLocator) <- "constant"
     }
   }
 
