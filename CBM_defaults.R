@@ -22,7 +22,7 @@ defineModule(sim, list(
                  desc = "URL for dbPath"),
     expectsInput(
       objectName = "ecoLocator", objectClass = "sf",
-      sourceURL = "http://sis.agr.gc.ca/cansis/nsdb/ecostrat/zone/ecozone_shp.zip",
+      sourceURL = "https://sis.agr.gc.ca/cansis/nsdb/ecostrat/zone/ecozone_shp.zip",
       desc = "Canada's ecozones as polygon features"),
     expectsInput(
       objectName = "ecoLocatorURL", objectClass = "character",
