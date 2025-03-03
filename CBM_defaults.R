@@ -246,7 +246,7 @@ sim$species_tr <- species_tr[locale_id <= 1,]
 
         dlPath <- file.path(inputPath(sim), "ecozone_shp.zip")
         if (!file.exists(dlPath)){
-          download.file(extractURL("ecoLocator"), dlPath, mode = "wb", quiet = TRUE)
+          download.file(extractURL("ecoLocator"), dlPath, mode = "wb", cacheOK = FALSE, quiet = TRUE)
         }
 
         prepInputs(
