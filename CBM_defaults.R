@@ -33,7 +33,7 @@ defineModule(sim, list(
                   desc = "URL for dMatrixValue"),
     expectsInput(
       objectName = "ecoLocator", objectClass = "sf",
-      sourceURL = "http://sis.agr.gc.ca/cansis/nsdb/ecostrat/zone/ecozone_shp.zip",
+      sourceURL = "https://sis.agr.gc.ca/cansis/nsdb/ecostrat/zone/ecozone_shp.zip",
       desc = "Canada's ecozones as polygon features"),
     expectsInput(
       objectName = "ecoLocatorURL", objectClass = "character",
@@ -239,23 +239,27 @@ sim$species_tr <- species_tr[locale_id <= 1,]
       ## 2024-12-04 NOTE:
       ## Multiple users had issues downloading and extracting this file via prepInputs.
       ## Downloading the ZIP directly and saving it in the inputs directory works OK.
-      sim$ecoLocator <- tryCatch(
+      sim$ecoLocator <- tryCatch({
+
+        dlPath <- file.path(inputPath(sim), "ecozone_shp.zip")
+        if (!file.exists(dlPath)){
+          download.file(extractURL("ecoLocator"), dlPath, mode = "wb", cacheOK = FALSE, quiet = TRUE)
+        }
 
         prepInputs(
           destinationPath = inputPath(sim),
-          url         = extractURL("ecoLocator"),
-          filename1   = "ecozone_shp.zip",
+          archive     = "ecozone_shp.zip",
           targetFile  = "ecozones.shp",
           alsoExtract = "similar",
           fun         = sf::st_read(targetFile, agr = "constant", quiet = TRUE)
-        ),
+        )
 
-        error = function(e) stop(
-          "Canada ecozones Shapefile failed be downloaded and extracted:\n", e$message, "\n\n",
-          "If this error persists, download the ZIP file directly and save it to the inputs directory.",
-          "\nDownload URL: ", extractURL("ecoLocator"),
-          "\nInputs directory: ", normalizePath(inputPath(sim), winslash = "/"),
-          call. = FALSE))
+      }, error = function(e) stop(
+        "Canada ecozones Shapefile failed be downloaded and extracted:\n", e$message, "\n\n",
+        "If this error persists, download the ZIP file directly and save it to the inputs directory.",
+        "\nDownload URL: ", extractURL("ecoLocator"),
+        "\nInputs directory: ", normalizePath(inputPath(sim), winslash = "/"),
+        call. = FALSE))
 
       # Make ecoID field
       sim$ecoLocator <- cbind(ecoID = sim$ecoLocator$ECOZONE, sim$ecoLocator)
