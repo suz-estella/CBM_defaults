@@ -231,13 +231,16 @@ Init <- function(sim) {
 
     }else{
 
+      #browser()
+
       archivePath <- prepInputs(
         destinationPath = inputPath(sim),
         url         = extractURL("ecoLocator"),
         targetFile  = "ecozone_shp.zip",
+        dlFun       = download.file(extractURL("ecoLocator"), file.path(inputPath(sim), "ecozone_shp.zip"), mode = "wb", quiet = TRUE),
         archive     = NA,
         fun         = NA
-      )
+      ) |> Cache()
 
       sim$ecoLocator <- prepInputs(
         destinationPath = inputPath(sim),
