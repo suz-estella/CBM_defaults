@@ -240,7 +240,7 @@ Init <- function(sim) {
           destinationPath = inputPath(sim),
           url         = extractURL("ecoLocator"),
           filename1   = "ecozone_shp.zip",
-          targetFile  = "ecozones.shp",
+          targetFile  = "Ecozones/ecozones.shp",
           alsoExtract = "similar",
           fun         = sf::st_read(targetFile, agr = "constant", quiet = TRUE)
         ),
