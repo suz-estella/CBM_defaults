@@ -233,18 +233,18 @@ Init <- function(sim) {
 
       #browser()
 
-      archivePath <- prepInputs(
+      prepInputs(
         destinationPath = inputPath(sim),
         url         = extractURL("ecoLocator"),
         targetFile  = "ecozone_shp.zip",
         dlFun       = download.file(extractURL("ecoLocator"), file.path(inputPath(sim), "ecozone_shp.zip"), mode = "wb", quiet = TRUE),
         archive     = NA,
         fun         = NA
-      )
+      ) |> Cache()
 
       sim$ecoLocator <- prepInputs(
         destinationPath = inputPath(sim),
-        archive     = archivePath,
+        archive     = file.path(inputPath(sim), "ecozone_shp.zip"),
         targetFile  = "Ecozones/ecozones.shp",
         alsoExtract = "similar",
         fun         = sf::st_read(targetFile, agr = "constant", quiet = TRUE)
