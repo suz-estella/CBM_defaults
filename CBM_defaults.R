@@ -240,7 +240,7 @@ Init <- function(sim) {
         dlFun       = download.file(extractURL("ecoLocator"), file.path(inputPath(sim), "ecozone_shp.zip"), mode = "wb", quiet = TRUE),
         archive     = NA,
         fun         = NA
-      ) |> Cache()
+      )
 
       sim$ecoLocator <- prepInputs(
         destinationPath = inputPath(sim),
