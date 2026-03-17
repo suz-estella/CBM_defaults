@@ -44,7 +44,7 @@ jobs:
       - name: Install extra Linux dependencies
         if: runner.os == 'Linux'
         run: |
-          sudo apt -y install libfontconfig1-dev
+          sudo apt -y install libfontconfig1-dev libmagick++-6.q16-dev
         shell: bash
 
       - uses: r-lib/actions/setup-r@v2
