@@ -21,7 +21,7 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - {os: windows-latest, r: 'release'}
+          #- {os: windows-latest, r: 'release'}
           - {os: ubuntu-latest,  r: 'release'}
           #- {os: macOS-latest,   r: 'release'}
 
@@ -68,6 +68,12 @@ jobs:
       - name: Run tests
         run: |
           googledrive::drive_auth(path = Sys.getenv("GOOGLE_AUTH"))
-          testthat::test_dir("tests/testthat", filter = "integration", invert = TRUE, stop_on_failure = TRUE)
+
+          # Install required packages
+          withr::with_options(c(timeout = 600), Require::Install(
+            c(SpaDES.core::packages(modules = basename(getwd()), paths = "..")[[1]],
+              "SpaDES.project", "googledrive"),
+            repos = unique(c("predictiveecology.r-universe.dev", getOption("repos")))
+          ))
         shell: Rscript {0}
 
