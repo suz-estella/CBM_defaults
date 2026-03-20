@@ -12,8 +12,6 @@ runs:
   using: 'composite'
   steps:
 
-    - uses: actions/checkout@v4
-
     - uses: PredictiveEcology/actions/install-spatial-deps@v0.2
 
     - name: Install extra Linux dependencies
