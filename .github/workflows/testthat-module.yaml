@@ -40,7 +40,7 @@ jobs:
         if: ${{ env.GOOGLE_AUTH == '' }}
         run: exit 1
 
-      - uses: suz-estella/CBM_defaults/.github/actions/setup-SpaDES-tests.yaml@development
+      - uses: suz-estella/CBM_defaults/.github/actions/setup-SpaDES-tests.yaml@GHA-reuse
         with:
            r-version: ${{ matrix.config.r }}
 
