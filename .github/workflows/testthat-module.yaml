@@ -42,7 +42,7 @@ jobs:
 
       - uses: actions/checkout@v4
 
-      - uses: suz-estella/CBM_defaults/.github/actions/setup-SpaDES-tests@GHA-reuse
+      - uses: suz-estella/actions/setup-SpaDES-tests@main
         with:
            r-version: ${{ matrix.config.r }}
 
