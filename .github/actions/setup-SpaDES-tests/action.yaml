@@ -9,6 +9,7 @@ inputs:
     default: 'release'
 
 runs:
+  using: 'composite'
   steps:
 
     - uses: actions/checkout@v4
